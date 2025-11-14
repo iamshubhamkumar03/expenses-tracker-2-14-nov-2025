@@ -1,0 +1,277 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SpendCount - Your Personal Expense Tracker</title>
+    <link rel="stylesheet" href="style.css">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Times+New+Roman&display=swap" rel="stylesheet">
+</head>
+<body class="min-h-screen">
+
+    <div id="notification-container" class="fixed top-5 right-5 z-[102] w-full max-w-sm space-y-3"></div>
+
+    <div id="loading-spinner" class="fixed inset-0 bg-white bg-opacity-80 flex items-center justify-center z-[101] transition-opacity duration-300">
+        <svg class="animate-spin h-10 w-10 text-amber-800" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+            <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+            <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+        </svg>
+    </div>
+    
+    <div id="welcome-screen" class="hidden min-h-screen w-full flex items-center justify-center p-4">
+        <div class="text-center max-w-lg mx-auto">
+            <div class="w-24 h-24 bg-amber-800 rounded-full flex items-center justify-center mx-auto mb-6 shadow-lg">
+                <svg xmlns="http://www.w3.org/2000/svg" width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-wallet-cards"><rect width="18" height="18" x="3" y="3" rx="2"/><path d="M3 15h18"/><path d="M15 3v18"/><path d="M8 12h.01"/></svg>
+            </div>
+            <h1 class="text-5xl tracking-wider">SpendCount</h1>
+            <p class="text-xl text-amber-800/90 subtitle italic font-semibold mt-3 mb-12">Don't just pay, Track It.</p>
+            <button id="welcome-btn" class="bg-amber-800 hover:bg-amber-900 text-white btn-primary py-3 px-10 text-lg">
+                Get Started
+            </button>
+        </div>
+    </div>
+
+    <div id="months-screen" class="hidden max-w-4xl mx-auto p-4 md:p-8 pt-20">
+        <header class="relative text-center mb-8">
+              <button id="back-to-welcome-btn" class="absolute top-0 left-0 p-2 text-gray-600 hover:text-amber-800 transition-colors" title="Back to Welcome">
+                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M19 12H5M12 19l-7-7 7-7"/>
+                </svg>
+              </button>
+              <h1 class="text-4xl tracking-wider">My Expense Months</h1>
+              <p class="text-lg text-gray-600 mt-2 subtitle">Select a folder or jump to any month to add expenses.</p>
+              <form id="jump-to-month-form" class="mt-6 max-w-sm mx-auto flex items-center gap-2">
+                  <input type="month" id="jump-to-month-input" class="input-style" required>
+                  <button type="submit" class="bg-amber-800 hover:bg-amber-900 text-white btn-primary py-2 px-6 flex-shrink-0">Go</button>
+              </form>
+        </header>
+
+        <hr class="my-8 border-t-2 border-gray-200">
+
+        <div id="month-folders-list" class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6"></div>
+    </div>
+
+    <div id="app-screen" class="hidden max-w-7xl mx-auto p-4 md:p-8 pt-20">
+        <header class="flex flex-wrap justify-between items-center gap-4 mb-8">
+            <div class="flex items-center gap-3">
+                <div class="w-12 h-12 bg-amber-800 rounded-full flex items-center justify-center">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-wallet-cards"><rect width="18" height="18" x="3" y="3" rx="2"/><path d="M3 15h18"/><path d="M15 3v18"/><path d="M8 12h.01"/></svg>
+                </div>
+                <div>
+                    <h1 class="text-3xl tracking-wider">SpendCount</h1>
+                    <p class="text-xs text-amber-800/90 subtitle italic font-semibold">Don't just pay, Track It.</p>
+                </div>
+            </div>
+            <div class="flex items-center gap-4">
+                <button id="back-to-months-btn" class="p-2 text-gray-600 hover:text-amber-800 transition-colors" title="Back to Months">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M19 12H5M12 19l-7-7 7-7"/>
+                    </svg>
+                </button>
+                <div class="flex items-center gap-2">
+                    <label for="month-selector" class="font-bold subtitle text-gray-600">Viewing:</label>
+                    <input type="month" id="month-selector" class="input-style">
+                </div>
+            </div>
+        </header>
+        
+        <div class="grid grid-cols-1 sm:grid-cols-3 gap-6 mb-8">
+            <div class="card-style rounded-xl p-6">
+                <h2 class="text-sm tracking-wide font-semibold text-gray-500 mb-2 subtitle"><span class="font-bold text-amber-800">* </span>TOTAL BUDGET (₹)</h2>
+                <p id="total-budget" class="text-3xl font-bold text-amber-900">₹0.00</p>
+            </div>
+            <div class="card-style rounded-xl p-6">
+                <h2 class="text-sm tracking-wide font-semibold text-gray-500 mb-2 subtitle"><span class="font-bold text-amber-800">* </span>SPENT (₹)</h2>
+                <p id="total-spent" class="text-3xl font-bold text-red-600">₹0.00</p>
+            </div>
+            <div class="card-style rounded-xl p-6">
+                <h2 class="text-sm tracking-wide font-semibold text-gray-500 mb-2 subtitle"><span class="font-bold text-amber-800">* </span>REMAINING (₹)</h2>
+                <p id="remaining-budget" class="text-3xl font-bold text-green-600">₹0.00</p>
+            </div>
+        </div>
+
+        <div class="card-style rounded-xl p-6 mb-8">
+            <h3 id="chart-title" class="text-2xl mb-4"><span class="font-bold text-amber-800">* </span>Category Spending</h3>
+            <div class="relative h-64 md:h-80">
+                <canvas id="expense-chart"></canvas>
+            </div>
+        </div>
+
+         <div class="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-8">
+            <div class="card-style rounded-xl p-6">
+                <h3 class="text-2xl mb-4"><span class="font-bold text-amber-800">* </span>Monthly Budget</h3>
+                <form id="budget-form" class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                    <input type="text" id="budget-name" placeholder="Source name (e.g., Salary)" class="input-style sm:col-span-2" required>
+                    <input type="number" id="budget-amount" placeholder="Amount (₹)" class="input-style" required>
+                    <select id="budget-type" class="input-style">
+                        <option value="income">Income</option>
+                        <option value="debt">Debt</option>
+                        <option value="loan">Loan</option>
+                        <option value="savings">Savings</option>
+                    </select>
+                    <button type="submit" class="sm:col-span-2 w-full bg-blue-700 hover:bg-blue-800 text-white btn-primary py-2 px-6">Add Budget</button>
+                </form>
+                <div id="budget-list" class="space-y-2 max-h-40 overflow-y-auto no-scrollbar mt-4"></div>
+            </div>
+             <div class="card-style rounded-xl p-6">
+                 <h3 class="text-2xl mb-4"><span class="font-bold text-amber-800">* </span>Category Spending Limits</h3>
+                 <p class="text-gray-600 mb-4">Set spending limits for each category to get alerts when you're about to go over.</p>
+                 <button id="set-category-limits-btn" class="bg-purple-700 hover:bg-purple-800 text-white btn-primary py-2 px-6">Set Category Limits</button>
+                 <div id="limit-exceeded-list" class="mt-4 space-y-2"></div>
+             </div>
+        </div>
+
+        <div class="card-style rounded-xl p-6 mb-8">
+             <h3 class="text-2xl mb-4"><span class="font-bold text-amber-800">* </span>Add New Expense</h3>
+             <form id="expense-form" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+                 <input type="text" id="expense-name" placeholder="Expense name" class="input-style sm:col-span-2 lg:col-span-4" required>
+                 <input type="number" id="expense-amount" placeholder="Amount (₹)" class="input-style" required>
+                 <select id="expense-category" class="input-style" required></select>
+                 <input type="date" id="expense-date" class="input-style" required>
+                 <div class="grid grid-cols-3 gap-2">
+                     <select id="expense-hour" class="input-style" required></select>
+                     <select id="expense-minute" class="input-style" required></select>
+                     <select id="expense-ampm" class="input-style" required>
+                         <option value="AM">AM</option>
+                         <option value="PM">PM</option>
+                     </select>
+                 </div>
+                 <button type="submit" class="sm:col-span-2 lg:col-span-4 w-full bg-green-700 hover:bg-green-800 text-white btn-primary py-2 px-6">Save Expense</button>
+             </form>
+        </div>
+        
+        <div class="card-style rounded-xl p-6 mb-8">
+             <div class="flex items-center gap-3 mb-4">
+                 <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="text-amber-800"><path d="m12 8 2 5 5 2-5 2-2 5-2-5-5-2 5-2 2-5z"/><path d="M20 3h-2"/><path d="M22 5v-2"/><path d="m2.5 15.5 1.5 1.5"/><path d="M20 21h2"/><path d="M22 19v2"/><path d="m15.5 2.5 1.5-1.5"/><path d="m4 3h2"/><path d="M2 5V3"/><path d="M4 21H2"/><path d="M2 19v-2"/></svg>
+                 <h3 class="text-2xl"><span class="font-bold text-amber-800">* </span>AI-Powered Features</h3>
+             </div>
+
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+                <div>
+                    <h4 class="text-xl font-bold mb-3"><span class="font-bold text-amber-800">* </span>Scan Receipt or Bill</h4>
+                    <div class="flex gap-2">
+                        
+                        <label id="uploadLabel" for="receiptUploader" class="flex flex-col items-center justify-center w-full h-32 border-2 border-gray-300 border-dashed rounded-lg cursor-pointer bg-gray-50 hover:bg-gray-100">
+                            <div class="flex flex-col items-center justify-center pt-5 pb-6">
+                                <svg class="w-8 h-8 mb-2 text-gray-500" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 20 16"><path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 13h3a3 3 0 0 0 0-6h-.025A5.56 5.56 0 0 0 16 6.5 5.5 5.5 0 0 0 5.207 5.021C5.137 5.017 5.071 5 5 5a4 4 0 0 0 0 8h2.167M10 15V6m0 0L8 8m2-2 2 2"/></svg>
+                                <p class="text-sm text-gray-500"><span class="font-semibold">Upload Image</span></p>
+                            </div>
+                            <input id="receiptUploader" type="file" class="hidden" accept="image/png, image/jpeg, image/webp" />
+                        </label>
+                        <button id="openCameraButton" class="flex flex-col items-center justify-center w-full h-32 border-2 border-gray-300 border-dashed rounded-lg cursor-pointer bg-gray-50 hover:bg-gray-100">
+                            <div class="flex flex-col items-center justify-center pt-5 pb-6">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="w-8 h-8 mb-2 text-gray-500"><path d="M14.5 4h-5L7 7H4a2 2 0 0 0-2 2v9a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2V9a2 2 0 0 0-2-2h-3l-2.5-3z"/><circle cx="12" cy="13" r="3"/></svg>
+                                <p class="text-sm text-gray-500"><span class="font-semibold">Use Camera</span></p>
+                            </div>
+                        </button>
+                    </div>
+                    <div id="imagePreviewContainer" class="hidden text-center mt-4">
+                        <img id="imagePreview" class="max-h-40 mx-auto rounded-lg shadow-md" alt="Receipt Preview"/>
+                    </div>
+                    <div id="scanLoader" class="hidden mx-auto mt-4 loader"></div>
+                    <div id="scanResult" class="mt-4"></div>
+                    <div id="scanError" class="hidden mt-4 text-red-600 bg-red-100 p-3 rounded-lg text-sm"></div>
+                </div>
+
+                <div>
+                    <h4 class="text-xl font-bold mb-3"><span class="font-bold text-amber-800">* </span>Your AI Financial Insights</h4>
+                    <p class="text-gray-600 text-sm mb-4">Get a detailed analysis of your spending habits, budget, debts, and savings goals.</p>
+                    <button id="analyzeButton" class="w-full bg-teal-700 hover:bg-teal-800 text-white btn-primary py-2 px-6">Get Insights</button>
+                    <div id="analyzeLoader" class="hidden mx-auto mt-4 loader"></div>
+                    <div id="analysisResult" class="mt-4 bg-gray-50 p-4 rounded-lg hidden border-2 border-transparent bg-clip-border" style="background-image: linear-gradient(white, white), linear-gradient(to right, #fde68a, #92400e); border-radius: 0.75rem;"></div>
+                    <div id="analyzeError" class="hidden mt-4 text-red-600 bg-red-100 p-3 rounded-lg text-sm"></div>
+                </div>
+            </div>
+        </div>
+
+        <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+            <div class="card-style rounded-xl p-6">
+                <h3 id="upcoming-expenses-title" class="text-2xl mb-4"><span class="font-bold text-amber-800">* </span>Unpaid Expenses</h3>
+                <div id="upcoming-expenses-list" class="space-y-3 max-h-96 overflow-y-auto no-scrollbar">
+                    <p id="no-upcoming" class="text-gray-500 text-center py-4 subtitle">No unpaid expenses.</p>
+                </div>
+            </div>
+            <div class="card-style rounded-xl p-6">
+                <h3 id="paid-expenses-title" class="text-2xl mb-4"><span class="font-bold text-amber-800">* </span>Paid Expenses History</h3>
+                <div id="paid-expenses-list" class="space-y-3 max-h-96 overflow-y-auto no-scrollbar">
+                    <p id="no-paid" class="text-gray-500 text-center py-4 subtitle">No paid expenses yet.</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="card-style rounded-xl p-6 mt-8">
+            <h3 class="text-2xl mb-4"><span class="font-bold text-amber-800">* </span>Important Notes for the Month</h3>
+            <form id="notes-form" class="flex items-start gap-4 mb-4">
+                <textarea id="note-input" placeholder="Add a note..." class="input-style min-h-[40px] resize-y" rows="1" required></textarea>
+                <button type="submit" class="bg-sky-700 hover:bg-sky-800 text-white btn-primary py-2 px-6 flex-shrink-0">Save Note</button>
+            </form>
+            <div id="notes-list" class="space-y-2 max-h-48 overflow-y-auto no-scrollbar">
+                <p id="no-notes" class="text-gray-500 text-center py-4 subtitle">No important notes for this month.</p>
+            </div>
+        </div>
+    </div>
+
+    <div id="category-limits-modal" class="hidden fixed inset-0 z-[100] bg-black bg-opacity-60 flex items-center justify-center p-4">
+        <div class="bg-white p-6 rounded-xl shadow-2xl max-w-lg w-full card-style">
+            <div class="flex justify-between items-center mb-4">
+                <h3 class="text-2xl"><span class="font-bold text-amber-800">* </span>Set Category Limits</h3>
+                <button id="close-limits-modal-btn" class="text-gray-500 hover:text-gray-800 text-3xl font-bold">&times;</button>
+            </div>
+            <div id="category-limits-form-container" class="space-y-3 max-h-80 overflow-y-auto no-scrollbar pr-2">
+            </div>
+            <div class="flex justify-end mt-6">
+                <button id="save-limits-btn" class="bg-purple-700 hover:bg-purple-800 text-white btn-primary py-2 px-6">Save Limits</button>
+            </div>
+        </div>
+    </div>
+
+    <div id="camera-modal" class="hidden fixed inset-0 z-[100] bg-black bg-opacity-80 flex items-center justify-center p-4">
+        <div class="bg-white p-4 rounded-xl shadow-2xl max-w-2xl w-full card-style relative">
+            <video id="camera-feed" class="w-full h-auto rounded-lg" autoplay playsinline></video>
+            <div class="flex justify-center mt-4 gap-4">
+                 <button id="capture-btn" class="p-4 bg-blue-700 hover:bg-blue-800 text-white rounded-full transition-colors" title="Capture Image">
+                     <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14.5 4h-5L7 7H4a2 2 0 0 0-2 2v9a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2V9a2 2 0 0 0-2-2h-3l-2.5-3z"/><circle cx="12" cy="13" r="3"/></svg>
+                 </button>
+            </div>
+            <button id="close-camera-modal-btn" class="absolute top-2 right-2 text-white bg-black bg-opacity-50 rounded-full p-1 text-2xl leading-none">&times;</button>
+        </div>
+    </div>
+
+    <div id="repeated-expenses-modal" class="hidden fixed inset-0 z-[100] bg-black bg-opacity-60 flex items-center justify-center p-4">
+        <div class="bg-white p-6 rounded-xl shadow-2xl max-w-lg w-full card-style">
+            <div class="flex justify-between items-center mb-4">
+                <h3 class="text-2xl"><span class="font-bold text-amber-800">* </span>Manage Repeated Expenses</h3>
+                <button id="close-repeated-expenses-modal-btn" class="text-gray-500 hover:text-gray-800 text-3xl font-bold">&times;</button>
+            </div>
+            
+            <h4 class="text-xl font-bold mb-3 text-gray-700">Add New Repeated Expense</h4>
+            <form id="repeated-expense-form-modal-version" class="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-6 p-4 bg-gray-50 rounded-lg border">
+                <input type="text" placeholder="Expense name (e.g., Netflix)" class="input-style sm:col-span-2" required>
+                <input type="number" placeholder="Amount (₹)" class="input-style" required>
+                <select class="input-style" required></select>
+                <input type="number" placeholder="Day of month (1-31)" class="input-style" min="1" max="31" required>
+                <div class="grid grid-cols-3 gap-2">
+                    <select class="input-style" required></select>
+                    <select class="input-style" required></select>
+                    <select class="input-style" required>
+                        <option value="AM">AM</option>
+                        <option value="PM">PM</option>
+                    </select>
+                </div>
+                <button type="submit" class="sm:col-span-2 w-full bg-indigo-700 hover:bg-indigo-800 text-white btn-primary py-2 px-6">Add Expense</button>
+            </form>
+
+            <h4 class="text-xl font-bold mb-3 text-gray-700">Your Current Repeated Expenses</h4>
+            <div id="repeated-expenses-list-modal-version" class="space-y-2 max-h-60 overflow-y-auto no-scrollbar pr-2">
+                <p class="text-gray-500 text-center py-4 subtitle">No repeated expenses saved yet.</p>
+            </div>
+        </div>
+    </div>
+
+
+    <canvas id="capture-canvas" class="hidden"></canvas>
+
