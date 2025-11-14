@@ -1,0 +1,115 @@
+/* Custom Styles for SpendCount */
+
+html, body {
+    height: 100%;
+    width: 100%;
+    overflow-x: hidden;
+}
+body {
+    font-family: 'Inter', sans-serif;
+    color: #6D4C41;
+    background-color: #fff0db; 
+    background-image:
+        radial-gradient(circle at 15% 15%, rgba(188, 170, 164, 0.15) 0%, transparent 40%),
+        radial-gradient(circle at 85% 85%, rgba(216, 201, 195, 0.15) 0%, transparent 50%);
+    background-attachment: fixed;
+}
+h1, h2, h3 {
+    font-family: 'Times New Roman', Times, serif;
+    color: #4E342E;
+    font-weight: 700;
+}
+.subtitle {
+    font-family: Arial, sans-serif;
+    font-weight: 600;
+}
+.card-style {
+    background: #FFFFFF;
+    border: 1px solid #E0E0E0;
+    box-shadow: 0 4px 12px 0 rgba(0, 0, 0, 0.05);
+}
+.btn-primary {
+    font-weight: 600;
+    padding: 0.75rem 2rem;
+    border-radius: 0.5rem;
+    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+    transition: all 0.3s;
+    transform: scale(1);
+}
+.btn-primary:hover {
+    transform: scale(1.05);
+}
+.input-style {
+    width: 100%;
+    background-color: #f9fafb;
+    color: #1f2937;
+    border: 1px solid #d1d5db;
+    border-radius: 0.5rem;
+    padding: 0.5rem 1rem;
+}
+.input-style::placeholder {
+    color: #6b7280;
+}
+.input-style:focus {
+    outline: none;
+    box-shadow: 0 0 0 2px #92400e;
+}
+.no-scrollbar::-webkit-scrollbar { display: none; }
+.no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
+.loader {
+    border: 4px solid #f3f3f3;
+    border-top: 4px solid #92400e; /* Matching theme color */
+    border-radius: 50%;
+    width: 32px;
+    height: 32px;
+    animation: spin 1s linear infinite;
+}
+@keyframes spin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+}
+/* This rule hides the screens by default */
+#category-limits-modal.hidden, #camera-modal.hidden, #welcome-screen.hidden, #months-screen.hidden, #app-screen.hidden {
+    display: none;
+}
+
+/* Style for the toggle switch */
+.toggle-switch {
+    position: relative;
+    display: inline-block;
+    width: 44px; /* Slightly smaller */
+    height: 24px;
+}
+.toggle-switch input { 
+    opacity: 0;
+    width: 0;
+    height: 0;
+}
+.toggle-slider {
+    position: absolute;
+    cursor: pointer;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: #ccc;
+    transition: .4s;
+    border-radius: 24px;
+}
+.toggle-slider:before {
+    position: absolute;
+    content: "";
+    height: 18px;
+    width: 18px;
+    left: 3px;
+    bottom: 3px;
+    background-color: white;
+    transition: .4s;
+    border-radius: 50%;
+}
+input:checked + .toggle-slider {
+    background-color: #28a745; /* Green */
+}
+input:checked + .toggle-slider:before {
+    transform: translateX(20px);
+}
