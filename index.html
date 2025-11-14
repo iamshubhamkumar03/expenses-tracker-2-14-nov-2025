@@ -4,12 +4,15 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>SpendCount - Your Personal Expense Tracker</title>
+    
     <link rel="stylesheet" href="style.css">
+    
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Times+New+Roman&display=swap" rel="stylesheet">
+    
 </head>
 <body class="min-h-screen">
 
@@ -144,50 +147,6 @@
              </form>
         </div>
         
-        <div class="card-style rounded-xl p-6 mb-8">
-             <div class="flex items-center gap-3 mb-4">
-                 <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="text-amber-800"><path d="m12 8 2 5 5 2-5 2-2 5-2-5-5-2 5-2 2-5z"/><path d="M20 3h-2"/><path d="M22 5v-2"/><path d="m2.5 15.5 1.5 1.5"/><path d="M20 21h2"/><path d="M22 19v2"/><path d="m15.5 2.5 1.5-1.5"/><path d="m4 3h2"/><path d="M2 5V3"/><path d="M4 21H2"/><path d="M2 19v-2"/></svg>
-                 <h3 class="text-2xl"><span class="font-bold text-amber-800">* </span>AI-Powered Features</h3>
-             </div>
-
-            <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
-                <div>
-                    <h4 class="text-xl font-bold mb-3"><span class="font-bold text-amber-800">* </span>Scan Receipt or Bill</h4>
-                    <div class="flex gap-2">
-                        
-                        <label id="uploadLabel" for="receiptUploader" class="flex flex-col items-center justify-center w-full h-32 border-2 border-gray-300 border-dashed rounded-lg cursor-pointer bg-gray-50 hover:bg-gray-100">
-                            <div class="flex flex-col items-center justify-center pt-5 pb-6">
-                                <svg class="w-8 h-8 mb-2 text-gray-500" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 20 16"><path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 13h3a3 3 0 0 0 0-6h-.025A5.56 5.56 0 0 0 16 6.5 5.5 5.5 0 0 0 5.207 5.021C5.137 5.017 5.071 5 5 5a4 4 0 0 0 0 8h2.167M10 15V6m0 0L8 8m2-2 2 2"/></svg>
-                                <p class="text-sm text-gray-500"><span class="font-semibold">Upload Image</span></p>
-                            </div>
-                            <input id="receiptUploader" type="file" class="hidden" accept="image/png, image/jpeg, image/webp" />
-                        </label>
-                        <button id="openCameraButton" class="flex flex-col items-center justify-center w-full h-32 border-2 border-gray-300 border-dashed rounded-lg cursor-pointer bg-gray-50 hover:bg-gray-100">
-                            <div class="flex flex-col items-center justify-center pt-5 pb-6">
-                                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="w-8 h-8 mb-2 text-gray-500"><path d="M14.5 4h-5L7 7H4a2 2 0 0 0-2 2v9a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2V9a2 2 0 0 0-2-2h-3l-2.5-3z"/><circle cx="12" cy="13" r="3"/></svg>
-                                <p class="text-sm text-gray-500"><span class="font-semibold">Use Camera</span></p>
-                            </div>
-                        </button>
-                    </div>
-                    <div id="imagePreviewContainer" class="hidden text-center mt-4">
-                        <img id="imagePreview" class="max-h-40 mx-auto rounded-lg shadow-md" alt="Receipt Preview"/>
-                    </div>
-                    <div id="scanLoader" class="hidden mx-auto mt-4 loader"></div>
-                    <div id="scanResult" class="mt-4"></div>
-                    <div id="scanError" class="hidden mt-4 text-red-600 bg-red-100 p-3 rounded-lg text-sm"></div>
-                </div>
-
-                <div>
-                    <h4 class="text-xl font-bold mb-3"><span class="font-bold text-amber-800">* </span>Your AI Financial Insights</h4>
-                    <p class="text-gray-600 text-sm mb-4">Get a detailed analysis of your spending habits, budget, debts, and savings goals.</p>
-                    <button id="analyzeButton" class="w-full bg-teal-700 hover:bg-teal-800 text-white btn-primary py-2 px-6">Get Insights</button>
-                    <div id="analyzeLoader" class="hidden mx-auto mt-4 loader"></div>
-                    <div id="analysisResult" class="mt-4 bg-gray-50 p-4 rounded-lg hidden border-2 border-transparent bg-clip-border" style="background-image: linear-gradient(white, white), linear-gradient(to right, #fde68a, #92400e); border-radius: 0.75rem;"></div>
-                    <div id="analyzeError" class="hidden mt-4 text-red-600 bg-red-100 p-3 rounded-lg text-sm"></div>
-                </div>
-            </div>
-        </div>
-
         <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
             <div class="card-style rounded-xl p-6">
                 <h3 id="upcoming-expenses-title" class="text-2xl mb-4"><span class="font-bold text-amber-800">* </span>Unpaid Expenses</h3>
@@ -241,37 +200,10 @@
         </div>
     </div>
 
-    <div id="repeated-expenses-modal" class="hidden fixed inset-0 z-[100] bg-black bg-opacity-60 flex items-center justify-center p-4">
-        <div class="bg-white p-6 rounded-xl shadow-2xl max-w-lg w-full card-style">
-            <div class="flex justify-between items-center mb-4">
-                <h3 class="text-2xl"><span class="font-bold text-amber-800">* </span>Manage Repeated Expenses</h3>
-                <button id="close-repeated-expenses-modal-btn" class="text-gray-500 hover:text-gray-800 text-3xl font-bold">&times;</button>
-            </div>
-            
-            <h4 class="text-xl font-bold mb-3 text-gray-700">Add New Repeated Expense</h4>
-            <form id="repeated-expense-form-modal-version" class="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-6 p-4 bg-gray-50 rounded-lg border">
-                <input type="text" placeholder="Expense name (e.g., Netflix)" class="input-style sm:col-span-2" required>
-                <input type="number" placeholder="Amount (₹)" class="input-style" required>
-                <select class="input-style" required></select>
-                <input type="number" placeholder="Day of month (1-31)" class="input-style" min="1" max="31" required>
-                <div class="grid grid-cols-3 gap-2">
-                    <select class="input-style" required></select>
-                    <select class="input-style" required></select>
-                    <select class="input-style" required>
-                        <option value="AM">AM</option>
-                        <option value="PM">PM</option>
-                    </select>
-                </div>
-                <button type="submit" class="sm:col-span-2 w-full bg-indigo-700 hover:bg-indigo-800 text-white btn-primary py-2 px-6">Add Expense</button>
-            </form>
-
-            <h4 class="text-xl font-bold mb-3 text-gray-700">Your Current Repeated Expenses</h4>
-            <div id="repeated-expenses-list-modal-version" class="space-y-2 max-h-60 overflow-y-auto no-scrollbar pr-2">
-                <p class="text-gray-500 text-center py-4 subtitle">No repeated expenses saved yet.</p>
-            </div>
-        </div>
-    </div>
-
 
     <canvas id="capture-canvas" class="hidden"></canvas>
 
+    <script src="script.js"></script>
+
+</body>
+</html>
